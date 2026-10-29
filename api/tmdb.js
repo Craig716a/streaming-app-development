@@ -204,6 +204,6 @@ export default async function (req, res) {
     return respond(res, { error: "Unknown action" }, 400);
   } catch (error) {
     const status = error instanceof TmdbError ? (error.status === 404 ? 404 : error.status === 503 ? 503 : 502) : 502;
-    return respond(res, { error: error.message }, { status });
+    return respond(res, { error: error.message }, status);
   }
 }

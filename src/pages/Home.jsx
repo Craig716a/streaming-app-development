@@ -36,10 +36,11 @@ export default function Home() {
     providerRegion,
   });
 
-  const recommended = uniqueTitles([
-    ...(trending.data?.results || []),
-    ...(catalog.data?.results || []),
-  ]);
+  const recommended = uniqueTitles(
+    homeTab === 'Recommend'
+      ? trending.data?.results || []
+      : catalog.data?.results || [],
+  );
   const featuredItems = recommended.slice(0, 10);
   const loading = homeTab === 'Recommend' ? trending.isLoading : catalog.isLoading;
   const failed = homeTab === 'Recommend' ? trending.isError : catalog.isError;
