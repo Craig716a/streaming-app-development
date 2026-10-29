@@ -1,8 +1,12 @@
-import { base44 } from '@/api/base44Client';
-
 export async function tmdbRequest(action, params = {}) {
-  const response = await base44.functions.invoke('tmdb', { action, ...params });
-  const data = response && response.data;
-  if (!data || data.error) throw new Error((data && data.error) || 'Catalogue request failed');
+  const response = await fetch('/api/tmdb', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action, ...params }),
+  });
+  const data = await response.json().catch(() => null);
+  if (!response.ok || !data || data.error) {
+    throw new Error((data && data.error) || 'Catalogue request failed');
+  }
   return data;
 }
