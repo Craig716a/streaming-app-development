@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Play, Video } from 'lucide-react';
 import QueryError from '@/components/stream/QueryError';
 import { useAnimeLookup, useSeason, useTitle } from '@/hooks/useTmdb';
 import { isAnimeTitle } from '@/lib/media';
 import { absoluteEpisodeNumber, vidlyAnimeUrl, vidlyMovieUrl, vidlyTvUrl } from '@/lib/vidly';
+import useWatchProgress from '@/hooks/useWatchProgress';
 
 export default function Player() {
   const params = useParams();
@@ -16,6 +17,22 @@ export default function Player() {
   const [searchParams, setSearchParams] = useSearchParams();
   const track = searchParams.get('track') === 'dub' ? 'dub' : 'sub';
   const [source, setSource] = useState('auto');
+  const { progress, saveProgress } = useWatchProgress(mediaType, id);
+
+  useEffect(() => {
+    saveProgress({ seasonNumber, episodeNumber, seconds: progress?.seconds || 0 });
+  }, [episodeNumber, mediaType, id, seasonNumber]);
+
+  useEffect(() => {
+    const handleMessage = (event) => {
+      if (!event.origin.includes('vidly.pro')) return;
+      const payload = typeof event.data === 'string' ? (() => { try { return JSON.parse(event.data); } catch { return null; } })() : event.data;
+      const seconds = Number(payload?.currentTime ?? payload?.position ?? payload?.seconds);
+      if (Number.isFinite(seconds) && seconds >= 0) saveProgress({ seasonNumber, episodeNumber, seconds });
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [episodeNumber, saveProgress, seasonNumber]);
 
   const details = useTitle(mediaType, id, { enabled: Number.isFinite(id) && id > 0 });
   const title = details.data;
@@ -36,6 +53,8 @@ export default function Player() {
         : vidlyMovieUrl(id);
 
   const needsAnimeLookup = anime && animeLookup.isLoading && source === 'auto';
+  const resumeStart = Number(progress?.seconds) > 0 && progress?.seasonNumber === seasonNumber && progress?.episodeNumber === episodeNumber ? `?start=${Math.floor(progress.seconds)}` : '';
+  const playbackUrl = `${embedUrl}${resumeStart}`;
 
   return (
     <div className="player-page">
@@ -60,8 +79,8 @@ export default function Player() {
           </div>
         ) : (
           <iframe
-            key={embedUrl}
-            src={embedUrl}
+            key={playbackUrl}
+            src={playbackUrl}
             title={`${title?.title || 'Title'} player`}
             allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
             allowFullScreen

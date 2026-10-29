@@ -11,6 +11,7 @@ import TitleProviders from '@/components/stream/TitleProviders';
 import CastRow from '@/components/stream/CastRow';
 import { useRecommendations, useSeason, useTitle, useTitleProviders } from '@/hooks/useTmdb';
 import useLocalData from '@/hooks/useLocalData';
+import useWatchProgress from '@/hooks/useWatchProgress';
 import { yearOf } from '@/lib/media';
 
 const toCard = (title) => ({
@@ -50,6 +51,15 @@ export default function Title() {
   const providers = useTitleProviders(mediaType, id, { enabled: validId });
   const recommendations = useRecommendations(mediaType, id, { enabled: validId });
   const { favorites, toggleFavorite, addHistory } = useLocalData();
+  const { progress } = useWatchProgress(mediaType, id);
+
+  useEffect(() => {
+    if (!progress) return;
+    if (mediaType === 'tv') {
+      if (progress.seasonNumber) setSeasonNumber(progress.seasonNumber);
+      if (progress.episodeNumber) setSelectedEpisode(progress.episodeNumber);
+    }
+  }, [mediaType, progress?.seasonNumber, progress?.episodeNumber]);
 
   useEffect(() => {
     if (!title) return;
