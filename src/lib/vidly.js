@@ -1,13 +1,13 @@
 export function vidlyMovieUrl(id) {
-  return `https://embedmaster.link/movie/${id}`;
+  return `https://vidly.pro/movie/${id}`;
 }
 
 export function vidlyTvUrl(id, seasonNumber = 1, episodeNumber = 1) {
-  return `https://embedmaster.link/tv/${id}/${seasonNumber}/${episodeNumber}`;
+  return `https://vidly.pro/tv/${id}/${seasonNumber}/${episodeNumber}`;
 }
 
 export function vidlyAnimeUrl(malId, episodeNumber = 1, track = 'sub') {
-  return `https://embedmaster.link/tv/${malId}/1/${episodeNumber}`;
+  return `https://vidly.pro/anime/mal/${malId}/${episodeNumber}/${track === 'dub' ? 'dub' : 'sub'}`;
 }
 
 export function absoluteEpisodeNumber(seasons = [], seasonNumber = 1, episodeNumber = 1) {
