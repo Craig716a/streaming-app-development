@@ -11,6 +11,7 @@ import FeatureCarousel from '@/components/stream/FeatureCarousel';
 import useHomeData from '@/hooks/useHomeData';
 import useSaved from '@/hooks/useSaved';
 import { initialProviderRegion, uniqueTitles } from '@/lib/media';
+import { fallbackMedia } from '@/lib/fallbackMedia';
 
 const homeCategories = ['Recommend', 'Reality-TV', 'Movies', 'TV Shows', 'Anime', 'Korean Dramas'];
 
@@ -36,7 +37,11 @@ export default function Home() {
     providerRegion,
   });
 
-  const recommended = uniqueTitles([...(trending.data?.results || []), ...(catalog.data?.results || [])]);
+  const recommended = uniqueTitles([
+    ...(trending.data?.results || []),
+    ...(catalog.data?.results || []),
+    ...fallbackMedia,
+  ]);
   const featuredItems = recommended.slice(0, 10);
   const loading = homeTab === 'Recommend' ? trending.isLoading : catalog.isLoading;
   const failed = homeTab === 'Recommend' ? trending.isError : catalog.isError;
@@ -119,9 +124,9 @@ export default function Home() {
         </Link>
       </div>
 
-      {loading ? (
+      {loading && recommended.length === 0 ? (
         <LoadingGrid />
-      ) : failed ? (
+      ) : failed && recommended.length === 0 ? (
         <QueryError retry={retry} />
       ) : (
         <div className="home-trending-grid">
