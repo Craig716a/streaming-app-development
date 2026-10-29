@@ -110,6 +110,7 @@ export default function Home() {
       </div>
 
       <FeatureCarousel
+        key={homeTab}
         items={featuredItems}
         index={featureIndex}
         onSelect={setFeatureIndex}
