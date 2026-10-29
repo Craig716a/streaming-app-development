@@ -1,9 +1,9 @@
 export function vidlyMovieUrl(id) {
-  return `https://vidfast.vc/movie/${id}?autoPlay=true`;
+  return `https://cinesrc.st/embed/movie/${id}`;
 }
 
 export function vidlyTvUrl(id, seasonNumber = 1, episodeNumber = 1) {
-  return `https://vidfast.vc/tv/${id}/${seasonNumber}/${episodeNumber}?autoPlay=true`;
+  return `https://cinesrc.st/embed/tv/${id}?s=${seasonNumber}&e=${episodeNumber}`;
 }
 
 export function vidlyAnimeUrl(malId, episodeNumber = 1, track = 'sub') {
