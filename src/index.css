@@ -413,7 +413,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .title-detail-page { margin: -20px -12px 0; }
 .title-trailer { width: 100%; aspect-ratio: 1.62/1; max-height: 310px; min-height: 220px; overflow: hidden; position: relative; background: #160407; }
 .title-trailer iframe { width: 100%; height: 100%; border: 0; }
-.title-player { aspect-ratio: 16/9; max-height: 420px; min-height: 200px; background: #000; }
+.title-player { position: relative; aspect-ratio: 16/9; max-height: 420px; min-height: 200px; background: #000; }
+.title-player-back { position: absolute; z-index: 2; top: 14px; left: 14px; width: 38px; height: 38px; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgba(4, 10, 18, .78); color: #fff; cursor: pointer; }
+.title-player-back:hover { background: rgba(239, 29, 58, .92); }
 .trailer-preview { width: 100%; height: 100%; min-height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 11px; padding: 20px; background-color: #160407; background-size: cover; background-position: center; text-align: center; }
 .trailer-play-action { min-width: 160px; min-height: 47px; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0 17px; border: 0; border-radius: 6px; background: #ef2944; color: white; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 24px rgba(0, 0, 0, .3); }
 .trailer-play-action:hover { background: #d91f39; }

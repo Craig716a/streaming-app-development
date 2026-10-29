@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Bookmark, CircleHelp, Play, Share2 } from 'lucide-react';
+import { Bookmark, CircleHelp, Share2 } from 'lucide-react';
 import LoadingGrid from '@/components/stream/LoadingGrid';
 import QueryError from '@/components/stream/QueryError';
 import EmptyState from '@/components/stream/EmptyState';
@@ -115,9 +115,6 @@ export default function Title() {
       <div className="title-detail-body">
         <div className="title-intro-label">
           <span>{mediaType === 'tv' ? 'TV SERIES' : 'MOVIE'}</span>
-          <button type="button" onClick={() => play()}>
-            <Play size={14} /> {mediaType === 'tv' ? 'Play episode' : 'Play movie'}
-          </button>
         </div>
         <h1 className="title-detail-name">
           {title.title}
