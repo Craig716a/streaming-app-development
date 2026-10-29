@@ -11,7 +11,6 @@ import FeatureCarousel from '@/components/stream/FeatureCarousel';
 import useHomeData from '@/hooks/useHomeData';
 import useSaved from '@/hooks/useSaved';
 import { initialProviderRegion, uniqueTitles } from '@/lib/media';
-import { fallbackMedia } from '@/lib/fallbackMedia';
 
 const homeCategories = ['Recommend', 'Reality-TV', 'Movies', 'TV Shows', 'Anime', 'Korean Dramas'];
 
@@ -40,7 +39,6 @@ export default function Home() {
   const recommended = uniqueTitles([
     ...(trending.data?.results || []),
     ...(catalog.data?.results || []),
-    ...fallbackMedia,
   ]);
   const featuredItems = recommended.slice(0, 10);
   const loading = homeTab === 'Recommend' ? trending.isLoading : catalog.isLoading;
