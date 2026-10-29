@@ -52,27 +52,41 @@ async function lookupAnime(title) {
   };
 }
 
-export default async function (req) {
+function respond(res, payload, status = 200) {
+  res.statusCode = status;
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.end(JSON.stringify(payload));
+}
+
+async function readBody(req) {
+  if (req.body && typeof req.body === "object") return req.body;
+  const chunks = [];
+  for await (const chunk of req) chunks.push(chunk);
+  const raw = Buffer.concat(chunks).toString("utf8");
+  return raw ? JSON.parse(raw) : {};
+}
+
+export default async function (req, res) {
   let payload;
   try {
-    payload = await req.json();
+    payload = await readBody(req);
   } catch {
-    return Response.json({ error: "Invalid request body" }, { status: 400 });
+    return respond(res, { error: "Invalid request body" }, 400);
   }
 
   const action = toText(payload && payload.action, 40);
-  if (!action) return Response.json({ error: "action is required" }, { status: 400 });
+  if (!action) return respond(res, { error: "action is required" }, 400);
 
   if (action === "animeLookup") {
     try {
-      return Response.json(await lookupAnime(toText(payload.title, 160)));
+      return respond(res, await lookupAnime(toText(payload.title, 160)));
     } catch (error) {
-      return Response.json({ error: error.message }, { status: 502 });
+      return respond(res, { error: error.message }, 502);
     }
   }
 
   const apiKey = process.env.TMDB_API_KEY;
-  if (!apiKey) return Response.json({ error: "TMDb API key is not configured." }, { status: 503 });
+  if (!apiKey) return respond(res, { error: "TMDb API key is not configured." }, 503);
 
   const mediaType = payload.mediaType === "tv" ? "tv" : "movie";
   const page = toInt(payload.page, 1, 500, 1);
@@ -100,19 +114,19 @@ export default async function (req) {
         watch_region: providerId ? watchRegion || undefined : undefined,
         include_adult: "false",
       });
-      return Response.json(mapPage(raw, mediaType));
+      return respond(res, mapPage(raw, mediaType));
     }
 
     if (action === "trending") {
       const type = ["all", "movie", "tv"].includes(payload.mediaType) ? payload.mediaType : "all";
       const window = payload.timeWindow === "day" ? "day" : "week";
       const raw = await getTmdb(apiKey, `/trending/${type}/${window}`, { page });
-      return Response.json(mapPage(raw));
+      return respond(res, mapPage(raw));
     }
 
     if (action === "today") {
       const date = isoDate(payload.date);
-      if (!date) return Response.json({ error: "A valid date is required" }, { status: 400 });
+      if (!date) return respond(res, { error: "A valid date is required" }, 400);
       const shared = { page: 1, include_adult: "false", sort_by: "popularity.desc" };
       const requests = [];
       const types = [];
@@ -141,14 +155,14 @@ export default async function (req) {
       const results = pages
         .flatMap((value, index) => mapPage(value, types[index]).results)
         .sort((a, b) => b.voteAverage - a.voteAverage);
-      return Response.json({ page: 1, totalPages: 1, totalResults: results.length, results });
+      return respond(res, { page: 1, totalPages: 1, totalResults: results.length, results });
     }
 
     if (action === "search") {
       const query = toText(payload.query, 120);
-      if (!query) return Response.json({ error: "Enter a title to search." }, { status: 400 });
+      if (!query) return respond(res, { error: "Enter a title to search." }, 400);
       const raw = await getTmdb(apiKey, "/search/multi", { query, page, include_adult: "false" });
-      return Response.json(mapPage(raw));
+      return respond(res, mapPage(raw));
     }
 
     if (action === "providers") {
@@ -157,39 +171,39 @@ export default async function (req) {
         language: "en-US",
         watch_region: region || undefined,
       });
-      return Response.json(mapProviderList(raw));
+      return respond(res, mapProviderList(raw));
     }
 
     if (action === "providerRegions") {
-      return Response.json(mapProviderRegions(await getTmdb(apiKey, "/watch/providers/regions", { language: "en-US" })));
+      return respond(res, mapProviderRegions(await getTmdb(apiKey, "/watch/providers/regions", { language: "en-US" })));
     }
 
     if (action === "title") {
-      if (!titleId) return Response.json({ error: "A valid title id is required" }, { status: 400 });
+      if (!titleId) return respond(res, { error: "A valid title id is required" }, 400);
       const raw = await getTmdb(apiKey, `/${mediaType}/${titleId}`, { append_to_response: "credits,videos" });
-      return Response.json(mapTitle(raw, mediaType));
+      return respond(res, mapTitle(raw, mediaType));
     }
 
     if (action === "season") {
-      if (!titleId) return Response.json({ error: "A valid title id is required" }, { status: 400 });
+      if (!titleId) return respond(res, { error: "A valid title id is required" }, 400);
       const seasonNumber = toInt(payload.seasonNumber, 0, 100, 0);
-      return Response.json(await getTmdb(apiKey, `/tv/${titleId}/season/${seasonNumber}`).then(mapSeason));
+      return respond(res, await getTmdb(apiKey, `/tv/${titleId}/season/${seasonNumber}`).then(mapSeason));
     }
 
     if (action === "recommendations") {
-      if (!titleId) return Response.json({ error: "A valid title id is required" }, { status: 400 });
+      if (!titleId) return respond(res, { error: "A valid title id is required" }, 400);
       const raw = await getTmdb(apiKey, `/${mediaType}/${titleId}/recommendations`, { page: 1 });
-      return Response.json(mapPage(raw, mediaType));
+      return respond(res, mapPage(raw, mediaType));
     }
 
     if (action === "titleProviders") {
-      if (!titleId) return Response.json({ error: "A valid title id is required" }, { status: 400 });
-      return Response.json(mapTitleProviders(await getTmdb(apiKey, `/${mediaType}/${titleId}/watch/providers`)));
+      if (!titleId) return respond(res, { error: "A valid title id is required" }, 400);
+      return respond(res, mapTitleProviders(await getTmdb(apiKey, `/${mediaType}/${titleId}/watch/providers`)));
     }
 
-    return Response.json({ error: "Unknown action" }, { status: 400 });
+    return respond(res, { error: "Unknown action" }, 400);
   } catch (error) {
     const status = error instanceof TmdbError ? (error.status === 404 ? 404 : error.status === 503 ? 503 : 502) : 502;
-    return Response.json({ error: error.message }, { status });
+    return respond(res, { error: error.message }, { status });
   }
 }
