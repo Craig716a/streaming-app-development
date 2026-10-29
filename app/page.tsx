@@ -1,47 +1,35 @@
-export default function Page() {
-  return (
-    <main
-      style={{
-        colorScheme: 'light dark',
-        position: 'relative',
-        display: 'flex',
-        minHeight: '100vh',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'light-dark(#fff, #000)',
-        color: 'light-dark(#000, #fff)',
-      }}
-    >
-      <svg
-        aria-hidden="true"
-        style={{ width: 80, height: 80 }}
-        width={80}
-        height={80}
-        fill="none"
-        viewBox="0 0 20 20"
-        xmlns="http://www.w3.org/2000/svg"
-        stroke="currentColor"
-        strokeWidth="0.5"
-      >
-        <path
-          d="M14.2 14.2H17V6.9375C17 4.76288 15.2371 3 13.0625 3H5.8V5.8M14.2 14.2V7.79063L7.79062 14.2H14.2ZM14.2 14.2V17H6.9375C4.76288 17 3 15.2371 3 13.0625V5.8H5.8M5.8 5.8V12.2313L12.2313 5.8H5.8Z"
-          strokeLinejoin="round"
-        />
-      </svg>
-      <p
-        style={{
-          position: 'absolute',
-          left: '50%',
-          top: 'calc(50% + 56px)',
-          transform: 'translateX(-50%)',
-          whiteSpace: 'nowrap',
-          fontSize: '14px',
-          fontWeight: 500,
-          color: 'light-dark(#71717a, #a1a1aa)',
-        }}
-      >
-        Your v0 generation will show here.
-      </p>
-    </main>
-  )
+import StreamingApp from '@/components/streaming-app'
+
+const fallbackPosters = [
+  { id: 1, title: 'Street Fighter', image: 'https://image.tmdb.org/t/p/w500/4Zb4Z2HjX1q5QYv7NqYQY8gQ4mP.jpg', type: 'movie', rating: '8.4' },
+  { id: 2, title: 'Spider-Man: Brand New Day', image: 'https://image.tmdb.org/t/p/w500/1Hq4A9wT7E7r5Y5F3pP7YQmGv1Y.jpg', type: 'movie' },
+  { id: 3, title: 'Hope', image: 'https://image.tmdb.org/t/p/w500/6bB1f8aKq2p4wJ8gJY1F2V3s8yK.jpg', type: 'movie' },
+  { id: 4, title: 'Whalefall', image: 'https://image.tmdb.org/t/p/w500/8mK2e0u7p4n1c9s5d3f6g2h1j0k.jpg', type: 'movie' },
+]
+
+async function getMovies() {
+  const key = process.env.TMDB_API_KEY
+  if (!key) return fallbackPosters
+  try {
+    const response = await fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${key}&language=en-US`, { next: { revalidate: 3600 } })
+    if (!response.ok) return fallbackPosters
+    const data = await response.json()
+    const movies = (data.results ?? []).filter((item: any) => item.poster_path).slice(0, 16)
+    return movies.map((item: any) => ({
+      id: item.id,
+      title: item.title || item.name,
+      image: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
+      type: item.media_type === 'tv' ? 'tv' : 'movie',
+      rating: item.vote_average ? item.vote_average.toFixed(1) : undefined,
+      isNew: Math.random() > 0.72,
+      update: item.media_type === 'tv' ? `Update to ${Math.max(2, Math.ceil(item.vote_average || 4))}` : undefined,
+    }))
+  } catch {
+    return fallbackPosters
+  }
+}
+
+export default async function Page() {
+  const movies = await getMovies()
+  return <StreamingApp movies={movies} />
 }
