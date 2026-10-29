@@ -47,7 +47,7 @@ export default function StreamingApp({ movies }: { movies: Movie[] }) {
   const items = filtered.length ? filtered : movies
   const related = items.slice(0, 8)
 
-  if (showPlayer) return <main className="player-page"><button className="back-button" onClick={() => setShowPlayer(false)}><X /></button><div className="player-screen"><PlaySquare /><span>Vidly player</span><small>Playback opens in a new tab from each title</small></div></main>
+  if (showPlayer) return <main className="player-page"><button className="back-button" onClick={() => setShowPlayer(false)}><X /></button><iframe className="vidly-frame" src={`https://vidly.pro/tv/1399/1/${selectedEpisode}`} title="Vidly player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowFullScreen referrerPolicy="origin" /></main>
 
   return <main className="app-shell">
     {active === 'categories' ? <section className="screen categories-screen">
