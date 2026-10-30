@@ -29,7 +29,10 @@ export default function Player() {
       if (!event.origin.includes('vidly.pro')) return;
       const payload = typeof event.data === 'string' ? (() => { try { return JSON.parse(event.data); } catch { return null; } })() : event.data;
       const seconds = Number(payload?.currentTime ?? payload?.position ?? payload?.seconds);
-      if (Number.isFinite(seconds) && seconds >= 0) saveProgress({ seasonNumber, episodeNumber, seconds });
+      if (Number.isFinite(seconds) && seconds >= 0) {
+        saveProgress({ seasonNumber, episodeNumber, seconds });
+        trackEvent({ eventType: 'progress', titleId: id, mediaType, seasonNumber, episodeNumber, seconds });
+      }
     };
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);

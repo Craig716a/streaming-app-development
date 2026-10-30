@@ -74,8 +74,8 @@ export default async function handler(req, res) {
       if (!isAdmin(req)) return send(res, 401, { error: 'Unauthorized' });
       const start = rangeStart(input.range);
       const params = [start];
-      const totals = await pool.query(`SELECT COUNT(*) FILTER (WHERE event_type = 'visit')::int AS visits, COUNT(DISTINCT visitor_id)::int AS unique_users, COALESCE(SUM(seconds),0)::int AS seconds FROM stream_analytics_events WHERE created_at >= $1`, params);
-      const top = await pool.query(`SELECT title_id AS id, MAX(title_name) AS title, COUNT(*) FILTER (WHERE event_type IN ('watch','progress'))::int AS watches, COALESCE(SUM(seconds),0)::int AS seconds FROM stream_analytics_events WHERE created_at >= $1 AND title_id IS NOT NULL GROUP BY title_id ORDER BY watches DESC, seconds DESC LIMIT 10`, params);
+      const totals = await pool.query(`SELECT COUNT(*) FILTER (WHERE event_type = 'visit')::int AS visits, COUNT(DISTINCT visitor_id)::int AS unique_users, COALESCE((SELECT SUM(max_seconds) FROM (SELECT visitor_id, title_id, season_number, episode_number, MAX(seconds)::int AS max_seconds FROM stream_analytics_events WHERE event_type = 'progress' AND created_at >= $1 GROUP BY visitor_id, title_id, season_number, episode_number) watched), 0)::int AS seconds FROM stream_analytics_events WHERE created_at >= $1`, params);
+      const top = await pool.query(`SELECT title_id AS id, MAX(title_name) AS title, COUNT(*) FILTER (WHERE event_type = 'watch')::int AS watches, COALESCE(SUM(seconds) FILTER (WHERE event_type = 'progress'),0)::int AS seconds FROM stream_analytics_events WHERE created_at >= $1 AND title_id IS NOT NULL GROUP BY title_id ORDER BY watches DESC, seconds DESC LIMIT 10`, params);
       return send(res, 200, { ...totals.rows[0], hours: Math.round(Number(totals.rows[0].seconds) / 3600 * 10) / 10, top: top.rows });
     }
     return send(res, 400, { error: 'Unknown action' });
