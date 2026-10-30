@@ -198,7 +198,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .share-option > svg { color: #8492a0; }
 
 .profile-page { max-width: 780px; margin: 0 auto; }
-.profile-avatar { width: 66px; height: 66px; display: grid; place-items: center; border: 1px solid rgba(255, 255, 255, .14); border-radius: 50%; color: #b8c5d0; background: #263646; }
+.profile-avatar { position: relative; width: 66px; height: 66px; display: grid; place-items: center; border: 1px solid rgba(255, 255, 255, .14); border-radius: 50%; color: #b8c5d0; background: #263646; }
 .profile-menu { border-top: 1px solid var(--line); }
 .profile-row { width: 100%; min-height: 68px; display: flex; align-items: center; gap: 13px; padding: 10px 4px; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; cursor: pointer; }
 .menu-icon { width: 35px; height: 35px; display: grid; place-items: center; border-radius: 7px; color: #9aa9b8; background: #142130; }
