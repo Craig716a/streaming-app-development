@@ -6,6 +6,7 @@ import { useAnimeLookup, useSeason, useTitle } from '@/hooks/useTmdb';
 import { isAnimeTitle } from '@/lib/media';
 import { absoluteEpisodeNumber, vidlyAnimeUrl, vidlyMovieUrl, vidlyTvUrl } from '@/lib/vidly';
 import useWatchProgress from '@/hooks/useWatchProgress';
+import { trackEvent } from '@/lib/analytics';
 
 export default function Player() {
   const params = useParams();
@@ -36,6 +37,9 @@ export default function Player() {
 
   const details = useTitle(mediaType, id, { enabled: Number.isFinite(id) && id > 0 });
   const title = details.data;
+  useEffect(() => {
+    if (title) trackEvent({ eventType: 'watch', titleId: id, titleName: title.title || title.name, mediaType, seasonNumber, episodeNumber });
+  }, [episodeNumber, id, mediaType, seasonNumber, title?.title, title?.name]);
   const anime = isAnimeTitle(title);
   const animeLookup = useAnimeLookup(title?.title, Boolean(title) && anime);
   const season = useSeason('tv', id, seasonNumber, { enabled: mediaType === 'tv' && Number.isFinite(id) && id > 0 });

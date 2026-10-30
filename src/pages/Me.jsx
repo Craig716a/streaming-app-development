@@ -24,6 +24,7 @@ export default function Me() {
       <section className="profile-top">
         <div className="profile-avatar">
           <UserRound size={35} />
+          <button type="button" className="admin-dot" onClick={() => navigate('/admin')} aria-label="Open admin portal" />
         </div>
         <button type="button" className="vip-mini" onClick={() => togglePanel('vip')}>
           <span>VIP</span>
