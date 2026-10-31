@@ -24,6 +24,12 @@ async function ensureSchema() {
   await pool.query('CREATE INDEX IF NOT EXISTS stream_analytics_title_idx ON stream_analytics_events (title_id, created_at)');
 }
 
+function readCookie(req, name) {
+  const raw = req.headers?.cookie || '';
+  const match = raw.split(';').map((part) => part.trim()).find((part) => part.startsWith(`${name}=`));
+  return match ? decodeURIComponent(match.slice(name.length + 1)) : null;
+}
+
 function send(res, status, body, headers = {}) {
   res.statusCode = status;
   Object.entries({ 'content-type': 'application/json', ...headers }).forEach(([key, value]) => res.setHeader(key, value));
@@ -64,16 +70,17 @@ export default async function handler(req, res) {
     await ensureSchema();
     const input = await body(req);
     if (input.action === 'event') {
-      if (!input.visitorId || input.visitorId === 'anonymous') return send(res, 400, { error: 'Missing visitor identifier' });
+      const visitorId = readCookie(req, 'stream_visitor') || crypto.randomUUID();
+      const visitorCookie = `stream_visitor=${encodeURIComponent(visitorId)}; Path=/; Max-Age=31536000; Secure; SameSite=Lax`;
       if (input.eventType === 'visit') {
-        const existing = await pool.query(`SELECT 1 FROM stream_analytics_events WHERE event_type = 'visit' AND visitor_id = $1 AND created_at >= CURRENT_DATE LIMIT 1`, [input.visitorId]);
-        if (existing.rowCount > 0) return send(res, 200, { ok: true, duplicate: true });
+        const existing = await pool.query(`SELECT 1 FROM stream_analytics_events WHERE event_type = 'visit' AND visitor_id = $1 AND created_at >= CURRENT_DATE LIMIT 1`, [visitorId]);
+        if (existing.rowCount > 0) return send(res, 200, { ok: true, duplicate: true }, { 'set-cookie': visitorCookie });
       }
       const country = req.headers?.['x-vercel-ip-country'] || req.headers?.['x-country'] || 'Unknown';
       const city = req.headers?.['x-vercel-ip-city'] || null;
       await pool.query(`INSERT INTO stream_analytics_events (event_type, visitor_id, title_id, title_name, media_type, season_number, episode_number, seconds, country_code, city)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [input.eventType || 'visit', input.visitorId, input.titleId || null, input.titleName || null, input.mediaType || null, input.seasonNumber || null, input.episodeNumber || null, Math.max(0, Number(input.seconds) || 0), country, city]);
-      return send(res, 200, { ok: true });
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [input.eventType || 'visit', visitorId, input.titleId || null, input.titleName || null, input.mediaType || null, input.seasonNumber || null, input.episodeNumber || null, Math.max(0, Number(input.seconds) || 0), country, city]);
+      return send(res, 200, { ok: true }, { 'set-cookie': visitorCookie });
     }
     if (input.action === 'login') {
       if (input.username !== ADMIN_USER || input.password !== process.env.ADMIN_PASSWORD) return send(res, 401, { error: 'Invalid credentials' });
