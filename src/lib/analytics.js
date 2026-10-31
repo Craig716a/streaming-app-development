@@ -9,12 +9,14 @@ export function getVisitorId() {
     }
     return id;
   } catch {
-    return 'anonymous';
+    return null;
   }
 }
 
 export function trackEvent(event) {
-  const payload = JSON.stringify({ action: 'event', visitorId: getVisitorId(), ...event });
+  const visitorId = getVisitorId();
+  if (!visitorId) return;
+  const payload = JSON.stringify({ action: 'event', visitorId, ...event });
   if (navigator.sendBeacon) {
     navigator.sendBeacon('/api/analytics', new Blob([payload], { type: 'application/json' }));
   } else {

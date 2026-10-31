@@ -22,7 +22,9 @@ import { trackEvent } from '@/lib/analytics';
 import './admin.css';
 
 const AuthenticatedApp = () => {
-  useEffect(() => { trackEvent({ eventType: 'visit' }); }, []);
+  useEffect(() => {
+    if (window.location.pathname !== '/admin') trackEvent({ eventType: 'visit' });
+  }, []);
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
   // Show loading spinner while checking app public settings or auth

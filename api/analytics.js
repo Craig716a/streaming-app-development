@@ -64,6 +64,11 @@ export default async function handler(req, res) {
     await ensureSchema();
     const input = await body(req);
     if (input.action === 'event') {
+      if (!input.visitorId || input.visitorId === 'anonymous') return send(res, 400, { error: 'Missing visitor identifier' });
+      if (input.eventType === 'visit') {
+        const existing = await pool.query(`SELECT 1 FROM stream_analytics_events WHERE event_type = 'visit' AND visitor_id = $1 AND created_at >= CURRENT_DATE LIMIT 1`, [input.visitorId]);
+        if (existing.rowCount > 0) return send(res, 200, { ok: true, duplicate: true });
+      }
       const country = req.headers?.['x-vercel-ip-country'] || req.headers?.['x-country'] || 'Unknown';
       const city = req.headers?.['x-vercel-ip-city'] || null;
       await pool.query(`INSERT INTO stream_analytics_events (event_type, visitor_id, title_id, title_name, media_type, season_number, episode_number, seconds, country_code, city)
