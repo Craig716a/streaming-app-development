@@ -18,6 +18,7 @@ import Search from '@/pages/Search';
 import Title from '@/pages/Title';
 import Player from '@/pages/Player';
 import Admin from '@/pages/Admin';
+import History from '@/pages/History';
 import { trackEvent } from '@/lib/analytics';
 import './admin.css';
 
@@ -58,6 +59,7 @@ const AuthenticatedApp = () => {
         <Route path="/categories" element={<Categories />} />
         <Route path="/sharing" element={<Sharing />} />
         <Route path="/me" element={<Me />} />
+        <Route path="/history" element={<History />} />
         <Route path="/search/:query" element={<Search />} />
         <Route path="/title/:mediaType/:id" element={<Title />} />
       </Route>

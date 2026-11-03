@@ -89,7 +89,7 @@ export default function Home() {
             </button>
           ) : null}
         </form>
-        <button type="button" className="history-shortcut" onClick={() => navigate('/me?panel=history')} aria-label="Open watch history">
+        <button type="button" className="history-shortcut" onClick={() => navigate('/history')} aria-label="Open watch history">
           <Clock3 size={22} />
         </button>
       </div>
