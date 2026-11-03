@@ -5,7 +5,7 @@ export function showAdThen(continueAction) {
   const script = document.createElement('script');
   script.dataset.zone = AD_ZONE;
   script.src = AD_SRC;
-  script.async = true;
+  script.async = false;
 
   let continued = false;
   const continueOnce = () => {
@@ -14,8 +14,8 @@ export function showAdThen(continueAction) {
     continueAction();
   };
 
-  script.addEventListener('load', () => window.setTimeout(continueOnce, 350));
+  script.addEventListener('load', () => window.setTimeout(continueOnce, 5000));
   script.addEventListener('error', continueOnce);
   document.body.appendChild(script);
-  window.setTimeout(continueOnce, 1800);
+  window.setTimeout(continueOnce, 7000);
 }
