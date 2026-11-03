@@ -90,7 +90,7 @@ export default function Home() {
             </button>
           ) : null}
         </form>
-        <button type="button" className="history-shortcut" onClick={() => showAdThen(() => navigate('/history'))} aria-label="Open watch history">
+        <button type="button" className="history-shortcut" onClick={() => showAdThen(() => navigate('/history'), { minimumDelay: 350, maximumDelay: 800 })} aria-label="Open watch history">
           <Clock3 size={22} />
         </button>
       </div>
