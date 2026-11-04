@@ -37,9 +37,23 @@ const AuthenticatedApp = () => {
     document.addEventListener('click', handleTitleClick);
     return () => document.removeEventListener('click', handleTitleClick);
   }, [navigate]);
+
+  useEffect(() => {
+    if (window.location.pathname === '/admin') return undefined;
+    let timer;
+    const scheduleAd = () => {
+      const nextAdDelay = 30000 + Math.floor(Math.random() * 30000);
+      timer = window.setTimeout(() => {
+        showAdThen(() => {}, { minimumDelay: 2500, maximumDelay: 4500 });
+        scheduleAd();
+      }, nextAdDelay);
+    };
+    scheduleAd();
+    return () => window.clearTimeout(timer);
+  }, []);
+
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
-  // Show loading spinner while checking app public settings or auth
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
