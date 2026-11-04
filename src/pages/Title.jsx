@@ -13,7 +13,6 @@ import { useRecommendations, useSeason, useTitle, useTitleProviders } from '@/ho
 import useLocalData from '@/hooks/useLocalData';
 import useWatchProgress from '@/hooks/useWatchProgress';
 import { yearOf } from '@/lib/media';
-import { showAdThen } from '@/lib/ads';
 
 const toCard = (title) => ({
   id: title.id,
@@ -97,7 +96,7 @@ export default function Title() {
   const favorite = favorites.some((item) => item.id === title.id && item.mediaType === title.mediaType);
   const playTrack = track === 'Dub' ? 'dub' : 'sub';
   const play = (episodeNumber = selectedEpisode) =>
-    showAdThen(() => navigate(`/player/${mediaType}/${id}/${selectedSeason}/${episodeNumber}?track=${playTrack}`));
+    navigate(`/player/${mediaType}/${id}/${selectedSeason}/${episodeNumber}?track=${playTrack}`);
 
   const shareTitle = async () => {
     const url = window.location.href;

@@ -11,7 +11,6 @@ import FeatureCarousel from '@/components/stream/FeatureCarousel';
 import useHomeData from '@/hooks/useHomeData';
 import useSaved from '@/hooks/useSaved';
 import { initialProviderRegion, uniqueTitles } from '@/lib/media';
-import { showAdThen } from '@/lib/ads';
 
 const homeCategories = ['Recommend', 'Reality-TV', 'Movies', 'TV Shows', 'Anime', 'Korean Dramas'];
 
@@ -90,7 +89,7 @@ export default function Home() {
             </button>
           ) : null}
         </form>
-        <button type="button" className="history-shortcut" onClick={() => showAdThen(() => navigate('/history'), { minimumDelay: 350, maximumDelay: 800 })} aria-label="Open watch history">
+        <button type="button" className="history-shortcut" onClick={() => navigate('/history')} aria-label="Open watch history">
           <Clock3 size={22} />
         </button>
       </div>
