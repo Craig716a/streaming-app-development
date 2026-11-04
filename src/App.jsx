@@ -26,7 +26,7 @@ const AuthenticatedApp = () => {
   useEffect(() => {
     if (window.location.pathname !== '/admin') trackEvent({ eventType: 'visit' });
 
-  }, [navigate]);
+  }, []);
 
 
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
