@@ -34,8 +34,8 @@ const AuthenticatedApp = () => {
       event.preventDefault();
       showAdThen(() => navigate(link.getAttribute('href')));
     };
-    document.addEventListener('click', handleTitleClick);
-    return () => document.removeEventListener('click', handleTitleClick);
+    document.addEventListener('click', handleTitleClick, true);
+    return () => document.removeEventListener('click', handleTitleClick, true);
   }, [navigate]);
 
   useEffect(() => {
