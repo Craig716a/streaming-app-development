@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -20,12 +20,23 @@ import Player from '@/pages/Player';
 import Admin from '@/pages/Admin';
 import History from '@/pages/History';
 import { trackEvent } from '@/lib/analytics';
+import { showAdThen } from '@/lib/ads';
 import './admin.css';
 
 const AuthenticatedApp = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (window.location.pathname !== '/admin') trackEvent({ eventType: 'visit' });
-  }, []);
+    const handleTitleClick = (event) => {
+      const link = event.target.closest('a[href^="/title/"]');
+      if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      showAdThen(() => navigate(link.getAttribute('href')));
+    };
+    document.addEventListener('click', handleTitleClick);
+    return () => document.removeEventListener('click', handleTitleClick);
+  }, [navigate]);
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
   // Show loading spinner while checking app public settings or auth
