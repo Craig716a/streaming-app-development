@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Play, Video } from 'lucide-react';
-import QueryError from '@/components/stream/QueryError';
+import { ArrowLeft, Video } from 'lucide-react';
 import { useSeason, useTitle } from '@/hooks/useTmdb';
 import useWatchProgress from '@/hooks/useWatchProgress';
 import { trackEvent } from '@/lib/analytics';
@@ -56,28 +55,15 @@ export default function Player() {
       </div>
 
       <div className="player-frame">
-        {details.isLoading ? (
-          <div className="player-loading">
-            <div className="player-play">
-              <Play size={26} fill="currentColor" />
-            </div>
-            <span className="eyebrow">LOADING TITLE</span>
-          </div>
-        ) : details.isError ? (
-          <div className="player-empty">
-            <QueryError retry={details.refetch} />
-          </div>
-        ) : (
-          <iframe
-            key={playbackUrl}
-            src={playbackUrl}
-            title={`${title?.title || 'Title'} player`}
-            allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-            allowFullScreen
-            sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
-            referrerPolicy="origin"
-          />
-        )}
+        <iframe
+          key={playbackUrl}
+          src={playbackUrl}
+          title={`${title?.title || 'Title'} player`}
+          allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+          allowFullScreen
+          sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+          referrerPolicy="origin"
+        />
       </div>
 
       <div className="player-caption">
