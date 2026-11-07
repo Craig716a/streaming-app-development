@@ -61,7 +61,6 @@ export default function Player() {
           title={`${title?.title || 'Title'} player`}
           allow="autoplay *; fullscreen *; picture-in-picture *; encrypted-media *; payment *"
           allowFullScreen
-          sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
           referrerPolicy="no-referrer"
         />
       </div>
