@@ -1,10 +1,11 @@
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { vidlyMovieUrl, vidlyTvUrl } from '@/lib/vidly';
 
 export default function TitlePlayer({ mediaType, id, seasonNumber = 1, episodeNumber = 1 }) {
   const navigate = useNavigate();
-  const src = mediaType === 'tv' ? vidlyTvUrl(id, seasonNumber, episodeNumber) : vidlyMovieUrl(id);
+  const src = mediaType === 'tv'
+    ? `https://embedmaster.link/tv/${id}/${seasonNumber}/${episodeNumber}?skin=onyx&welcome_page=on&autoplay=off`
+    : `https://embedmaster.link/movie/${id}?skin=onyx&welcome_page=on&autoplay=off`;
 
   return (
     <section className="title-trailer title-player">
