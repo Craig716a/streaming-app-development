@@ -18,7 +18,8 @@ export default function TitlePlayer({ mediaType, id, seasonNumber = 1, episodeNu
         title="Title player"
           allow="autoplay *; fullscreen *; picture-in-picture *; encrypted-media *; payment *"
           allowFullScreen
-          referrerPolicy="no-referrer-when-downgrade"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+          referrerPolicy="no-referrer"
       />
     </section>
   );
