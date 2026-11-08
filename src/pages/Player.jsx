@@ -15,12 +15,13 @@ export default function Player() {
   const { progress, saveProgress } = useWatchProgress(mediaType, id);
 
   useEffect(() => {
-    saveProgress({ seasonNumber, episodeNumber, seconds: progress?.seconds || 0 });
+    const sameEpisode = progress?.seasonNumber === seasonNumber && progress?.episodeNumber === episodeNumber;
+    saveProgress({ seasonNumber, episodeNumber, seconds: sameEpisode ? Number(progress?.seconds) || 0 : 0 });
   }, [episodeNumber, mediaType, id, seasonNumber]);
 
   useEffect(() => {
     const handleMessage = (event) => {
-      if (!event.origin.includes('embedmaster.link')) return;
+      if (!event.origin.includes('yapgrid.com')) return;
       const payload = typeof event.data === 'string' ? (() => { try { return JSON.parse(event.data); } catch { return null; } })() : event.data;
       const seconds = Number(payload?.currentTime ?? payload?.position ?? payload?.seconds);
       if (Number.isFinite(seconds) && seconds >= 0) {
@@ -78,7 +79,7 @@ export default function Player() {
         <div className="player-notice">
           <Video size={16} />
           <span>
-            Playback is delivered by Embedmaster in a sandboxed player.
+            Playback is delivered by Yapgrid in a sandboxed player. Your position is saved on this device.
           </span>
         </div>
       </div>
