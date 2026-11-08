@@ -40,8 +40,8 @@ export default function Player() {
   const season = useSeason('tv', id, seasonNumber, { enabled: mediaType === 'tv' && Number.isFinite(id) && id > 0 });
   const episode = season.data?.episodes?.find((entry) => entry.episodeNumber === episodeNumber);
   const embedUrl = mediaType === 'tv'
-    ? `https://embedmaster.link/tv/${id}/${seasonNumber}/${episodeNumber}?skin=onyx&welcome_page=on&autoplay=off`
-    : `https://embedmaster.link/movie/${id}?skin=onyx&welcome_page=on&autoplay=off`;
+    ? `https://yapgrid.com/embed/tv/${id}/${seasonNumber}/${episodeNumber}?autoplay=1`
+    : `https://yapgrid.com/embed/movie/${id}?autoplay=1`;
   const resumeStart = Number(progress?.seconds) > 0 && progress?.seasonNumber === seasonNumber && progress?.episodeNumber === episodeNumber ? `&start=${Math.floor(progress.seconds)}` : '';
   const playbackUrl = `${embedUrl}${resumeStart}`;
 
@@ -61,6 +61,7 @@ export default function Player() {
           title={`${title?.title || 'Title'} player`}
           allow="autoplay *; fullscreen *; picture-in-picture *; encrypted-media *; payment *"
           allowFullScreen
+          sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
           referrerPolicy="no-referrer"
         />
       </div>
