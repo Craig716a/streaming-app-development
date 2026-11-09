@@ -24,8 +24,17 @@ import './admin.css';
 
 const AuthenticatedApp = () => {
   useEffect(() => {
-    if (window.location.pathname !== '/admin') trackEvent({ eventType: 'visit' });
-
+    if (window.location.pathname === '/admin') return undefined;
+    trackEvent({ eventType: 'visit' });
+    const recordActiveTime = () => {
+      if (document.visibilityState === 'visible') trackEvent({ eventType: 'heartbeat', seconds: 15 });
+    };
+    const interval = window.setInterval(recordActiveTime, 15000);
+    document.addEventListener('visibilitychange', recordActiveTime);
+    return () => {
+      window.clearInterval(interval);
+      document.removeEventListener('visibilitychange', recordActiveTime);
+    };
   }, []);
 
 

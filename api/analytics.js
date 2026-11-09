@@ -95,7 +95,7 @@ export default async function handler(req, res) {
       if (!isAdmin(req)) return send(res, 401, { error: 'Unauthorized' });
       const start = rangeStart(input.range);
       const params = [start];
-      const totals = await pool.query(`SELECT COUNT(*) FILTER (WHERE event_type = 'visit')::int AS visits, COUNT(DISTINCT visitor_id)::int AS unique_users, COALESCE((SELECT SUM(max_seconds) FROM (SELECT visitor_id, title_id, season_number, episode_number, MAX(seconds)::int AS max_seconds FROM stream_analytics_events WHERE event_type = 'progress' AND created_at >= $1 GROUP BY visitor_id, title_id, season_number, episode_number) watched), 0)::int AS seconds FROM stream_analytics_events WHERE created_at >= $1`, params);
+      const totals = await pool.query(`SELECT COUNT(*) FILTER (WHERE event_type = 'visit')::int AS visits, COUNT(DISTINCT visitor_id)::int AS unique_users, COALESCE(SUM(seconds) FILTER (WHERE event_type = 'heartbeat'), 0)::int AS seconds FROM stream_analytics_events WHERE created_at >= $1`, params);
       const top = await pool.query(`SELECT title_id AS id, MAX(title_name) AS title, COUNT(*) FILTER (WHERE event_type = 'watch')::int AS watches, COALESCE(SUM(seconds) FILTER (WHERE event_type = 'progress'),0)::int AS seconds FROM stream_analytics_events WHERE created_at >= $1 AND title_id IS NOT NULL GROUP BY title_id ORDER BY watches DESC, seconds DESC LIMIT 10`, params);
       const locations = await pool.query(`SELECT COALESCE(country_code, 'Unknown') AS country, COUNT(DISTINCT visitor_id)::int AS users FROM stream_analytics_events WHERE event_type = 'visit' AND created_at >= $1 GROUP BY country_code ORDER BY users DESC`, params);
       const totalUsers = locations.rows.reduce((sum, row) => sum + row.users, 0);
