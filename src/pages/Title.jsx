@@ -94,9 +94,9 @@ export default function Title() {
   }
 
   const favorite = favorites.some((item) => item.id === title.id && item.mediaType === title.mediaType);
-  const playTrack = track === 'Dub' ? 'dub' : 'sub';
+  const activePlayer = track === 'Dub/Captions' ? 'yapgrid' : 'vidspark';
   const play = (episodeNumber = selectedEpisode) =>
-    navigate(`/player/${mediaType}/${id}/${selectedSeason}/${episodeNumber}?track=${playTrack}`);
+    navigate(`/player/${mediaType}/${id}/${selectedSeason}/${episodeNumber}?player=${activePlayer}`);
 
   const shareTitle = async () => {
     const url = window.location.href;
@@ -110,7 +110,7 @@ export default function Title() {
 
   return (
     <div className="title-page title-detail-page">
-      <TitlePlayer mediaType={mediaType} id={id} seasonNumber={selectedSeason} episodeNumber={selectedEpisode} />
+      <TitlePlayer mediaType={mediaType} id={id} seasonNumber={selectedSeason} episodeNumber={selectedEpisode} player={activePlayer} />
 
       <div className="title-detail-body">
         <div className="title-intro-label">
@@ -159,7 +159,7 @@ export default function Title() {
         <div className="audio-track-row">
           <span>Language</span>
           <div className="track-switch">
-            {['Original', 'Dub'].map((option) => (
+            {['Original', 'Dub/Captions'].map((option) => (
               <button key={option} type="button" className={track === option ? 'selected' : ''} onClick={() => setTrack(option)}>
                 {option}
               </button>

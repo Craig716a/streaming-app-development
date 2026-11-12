@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Video } from 'lucide-react';
 import { useSeason, useTitle } from '@/hooks/useTmdb';
 import useWatchProgress from '@/hooks/useWatchProgress';
@@ -7,6 +7,8 @@ import { trackEvent } from '@/lib/analytics';
 
 export default function Player() {
   const params = useParams();
+  const [searchParams] = useSearchParams();
+  const selectedPlayer = searchParams.get('player') === 'yapgrid' ? 'yapgrid' : 'vidspark';
   const mediaType = params.mediaType === 'tv' ? 'tv' : 'movie';
   const id = Number(params.id);
   const seasonNumber = Number(params.season) || 1;
@@ -40,9 +42,13 @@ export default function Player() {
   }, [episodeNumber, id, mediaType, seasonNumber, title?.title, title?.name]);
   const season = useSeason('tv', id, seasonNumber, { enabled: mediaType === 'tv' && Number.isFinite(id) && id > 0 });
   const episode = season.data?.episodes?.find((entry) => entry.episodeNumber === episodeNumber);
-  const embedUrl = mediaType === 'tv'
-    ? `https://vidspark.to/tv/${id}/${seasonNumber}/${episodeNumber}`
-    : `https://vidspark.to/movie/${id}`;
+  const embedUrl = selectedPlayer === 'yapgrid'
+    ? mediaType === 'tv'
+      ? `https://yapgrid.com/embed/tv/${id}/${seasonNumber}/${episodeNumber}?autoplay=1`
+      : `https://yapgrid.com/embed/movie/${id}?autoplay=1`
+    : mediaType === 'tv'
+      ? `https://vidspark.to/tv/${id}/${seasonNumber}/${episodeNumber}`
+      : `https://vidspark.to/movie/${id}`;
   const resumeStart = Number(progress?.seconds) > 0 && progress?.seasonNumber === seasonNumber && progress?.episodeNumber === episodeNumber ? `&start=${Math.floor(progress.seconds)}` : '';
   const playbackUrl = `${embedUrl}${resumeStart}`;
 
