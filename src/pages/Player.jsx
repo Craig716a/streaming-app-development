@@ -41,8 +41,8 @@ export default function Player() {
   const season = useSeason('tv', id, seasonNumber, { enabled: mediaType === 'tv' && Number.isFinite(id) && id > 0 });
   const episode = season.data?.episodes?.find((entry) => entry.episodeNumber === episodeNumber);
   const embedUrl = mediaType === 'tv'
-    ? `https://yapgrid.com/embed/tv/${id}/${seasonNumber}/${episodeNumber}?autoplay=1`
-    : `https://yapgrid.com/embed/movie/${id}?autoplay=1`;
+    ? `https://vidspark.to/tv/${id}/${seasonNumber}/${episodeNumber}`
+    : `https://vidspark.to/movie/${id}`;
   const resumeStart = Number(progress?.seconds) > 0 && progress?.seasonNumber === seasonNumber && progress?.episodeNumber === episodeNumber ? `&start=${Math.floor(progress.seconds)}` : '';
   const playbackUrl = `${embedUrl}${resumeStart}`;
 

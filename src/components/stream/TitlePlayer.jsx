@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 export default function TitlePlayer({ mediaType, id, seasonNumber = 1, episodeNumber = 1 }) {
   const navigate = useNavigate();
   const src = mediaType === 'tv'
-    ? `https://yapgrid.com/embed/tv/${id}/${seasonNumber}/${episodeNumber}?autoplay=1`
-    : `https://yapgrid.com/embed/movie/${id}?autoplay=1`;
+    ? `https://vidspark.to/tv/${id}/${seasonNumber}/${episodeNumber}`
+    : `https://vidspark.to/movie/${id}`;
 
   return (
     <section className="title-trailer title-player">
