@@ -290,7 +290,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .player-top > span { color: #748596; font-size: 9px; letter-spacing: 1.5px; }
 .player-back { display: flex; align-items: center; gap: 8px; color: #c3ccd4; font-size: 12px; }
 .player-frame { width: 100%; max-width: 1080px; aspect-ratio: 16/9; max-height: calc(100dvh - 215px); min-height: 230px; margin: clamp(20px, 5vh, 54px) auto 23px; display: grid; place-items: center; overflow: hidden; border: 1px solid rgba(205, 222, 236, .13); border-radius: 8px; background: radial-gradient(ellipse at 50% 48%, #1b2a38, #09111a 68%); }
-.player-frame iframe { width: 100%; height: 100%; border: 0; }
+.player-frame iframe, .player-embed { width: 100%; height: 100%; border: 0; }
+.player-embed { display: grid; place-items: center; background: #000; }
+.player-embed iframe { width: 100%; height: 100%; border: 0; }
+.player-embed-error { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 24px; color: #f4f6f8; text-align: center; }
+.player-embed-error p { margin: 0; font-size: clamp(18px, 3vw, 24px); font-weight: 600; }
+.player-embed-error button { border: 1px solid rgba(255,255,255,.25); border-radius: 999px; padding: 9px 18px; background: #171d25; color: inherit; cursor: pointer; }
 .player-empty { display: flex; flex-direction: column; align-items: center; padding: 25px; text-align: center; }
 .player-play { width: 56px; height: 56px; margin-bottom: 22px; display: grid; place-items: center; border: 1px solid rgba(255, 255, 255, .19); border-radius: 50%; color: var(--red); }
 .player-empty h2 { margin: 8px 0; font: 600 22px var(--app-font-serif); }
@@ -416,6 +421,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .title-player { position: relative; aspect-ratio: 16/9; max-height: 420px; min-height: 200px; background: #000; }
 .title-player-back { position: absolute; z-index: 2; top: 14px; left: 14px; width: 38px; height: 38px; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgba(4, 10, 18, .78); color: #fff; cursor: pointer; }
 .title-player-back:hover { background: rgba(239, 29, 58, .92); }
+.title-player .player-embed { width: 100%; height: 100%; }
 .trailer-preview { width: 100%; height: 100%; min-height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 11px; padding: 20px; background-color: #160407; background-size: cover; background-position: center; text-align: center; }
 .trailer-play-action { min-width: 160px; min-height: 47px; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0 17px; border: 0; border-radius: 6px; background: #ef2944; color: white; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 24px rgba(0, 0, 0, .3); }
 .trailer-play-action:hover { background: #d91f39; }

@@ -1,5 +1,6 @@
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import PlayerEmbed from '@/components/stream/PlayerEmbed';
 
 export default function TitlePlayer({ mediaType, id, seasonNumber = 1, episodeNumber = 1, player = 'vidspark' }) {
   const navigate = useNavigate();
@@ -16,15 +17,7 @@ export default function TitlePlayer({ mediaType, id, seasonNumber = 1, episodeNu
       <button type="button" className="title-player-back" onClick={() => navigate(-1)} aria-label="Go back">
         <ArrowLeft size={20} />
       </button>
-      <iframe
-        key={src}
-        src={src}
-        title="Title player"
-          allow="autoplay *; fullscreen *; picture-in-picture *; encrypted-media *; payment *"
-          allowFullScreen
-          sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
-          referrerPolicy="no-referrer"
-      />
+      <PlayerEmbed src={src} title="Title player" mediaType={mediaType} />
     </section>
   );
 }
