@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Video } from 'lucide-react';
 import { useSeason, useTitle } from '@/hooks/useTmdb';
-import PlayerEmbed from '@/components/stream/PlayerEmbed';
 import useWatchProgress from '@/hooks/useWatchProgress';
 import { trackEvent } from '@/lib/analytics';
 
@@ -63,10 +62,14 @@ export default function Player() {
       </div>
 
       <div className="player-frame">
-        <PlayerEmbed
+        <iframe
+          key={playbackUrl}
           src={playbackUrl}
           title={`${title?.title || 'Title'} player`}
-          mediaType={mediaType}
+          allow="autoplay *; fullscreen *; picture-in-picture *; encrypted-media *; payment *"
+          allowFullScreen
+          sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+          referrerPolicy="no-referrer"
         />
       </div>
 
