@@ -157,7 +157,7 @@ export default function Title() {
         ) : null}
 
         <div className="audio-track-row">
-          <span>Language</span>
+          <span>Servers</span>
           <div className="track-switch">
             {[
               { value: 'Original', label: 'Server 1' },
