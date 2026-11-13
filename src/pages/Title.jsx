@@ -159,9 +159,12 @@ export default function Title() {
         <div className="audio-track-row">
           <span>Language</span>
           <div className="track-switch">
-            {['Original', 'Dub/Captions'].map((option) => (
-              <button key={option} type="button" className={track === option ? 'selected' : ''} onClick={() => setTrack(option)}>
-                {option}
+            {[
+              { value: 'Original', label: 'Server 1' },
+              { value: 'Dub/Captions', label: 'Server 2' },
+            ].map(({ value, label }) => (
+              <button key={value} type="button" className={track === value ? 'selected' : ''} onClick={() => setTrack(value)}>
+                {label}
               </button>
             ))}
           </div>
