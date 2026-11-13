@@ -15,10 +15,10 @@ export default function EpisodePicker({ seasons = [], season, seasonNumber, onSe
         <label className="season-picker">
           <select value={seasonNumber} onChange={(event) => onSeasonChange(Number(event.target.value))} aria-label="Select season">
             {seasons
-              .filter((entry) => entry.seasonNumber >= 0)
+              .filter((entry) => entry.seasonNumber > 0)
               .map((entry) => (
                 <option key={entry.id} value={entry.seasonNumber}>
-                  {entry.seasonNumber === 0 ? 'Specials' : `Season ${entry.seasonNumber}`}
+                  {`Season ${entry.seasonNumber}`}
                 </option>
               ))}
           </select>
