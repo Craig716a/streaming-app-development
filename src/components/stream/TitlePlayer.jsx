@@ -9,8 +9,8 @@ export default function TitlePlayer({ mediaType, id, seasonNumber = 1, episodeNu
       : `https://yapgrid.com/embed/movie/${id}?autoplay=1`
     : player === 'server3'
       ? mediaType === 'tv'
-        ? `https://111movies.net/tv/${id}/${seasonNumber}/${episodeNumber}`
-        : `https://111movies.net/movie/${id}`
+        ? `https://embedmaster.link/tv/${id}/${seasonNumber}/${episodeNumber}?skin=onyx&welcome_page=on&autoplay=off`
+        : `https://embedmaster.link/movie/${id}?skin=onyx&welcome_page=on&autoplay=off`
       : mediaType === 'tv'
         ? `https://vidspark.to/tv/${id}/${seasonNumber}/${episodeNumber}`
         : `https://vidspark.to/movie/${id}`;
@@ -24,7 +24,7 @@ export default function TitlePlayer({ mediaType, id, seasonNumber = 1, episodeNu
         key={src}
         src={src}
         title="Title player"
-          allow="autoplay *; fullscreen *; picture-in-picture *; encrypted-media *; payment *"
+          allow="autoplay *; fullscreen *; picture-in-picture *; encrypted-media *"
           allowFullScreen
           sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
           referrerPolicy="no-referrer"
