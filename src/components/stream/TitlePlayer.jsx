@@ -7,10 +7,10 @@ export default function TitlePlayer({ mediaType, id, seasonNumber = 1, episodeNu
     ? mediaType === 'tv'
       ? `https://yapgrid.com/embed/tv/${id}/${seasonNumber}/${episodeNumber}?autoplay=1`
       : `https://yapgrid.com/embed/movie/${id}?autoplay=1`
-    : player === 'vidsrc'
+    : player === 'server3'
       ? mediaType === 'tv'
-        ? `https://vidsrc.mov/embed/tv/${id}/${seasonNumber}/${episodeNumber}`
-        : `https://vidsrc.mov/embed/movie/${id}`
+        ? `https://111movies.net/tv/${id}/${seasonNumber}/${episodeNumber}`
+        : `https://111movies.net/movie/${id}`
       : mediaType === 'tv'
         ? `https://vidspark.to/tv/${id}/${seasonNumber}/${episodeNumber}`
         : `https://vidspark.to/movie/${id}`;

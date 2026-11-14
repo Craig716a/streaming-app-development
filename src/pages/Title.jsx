@@ -94,7 +94,7 @@ export default function Title() {
   }
 
   const favorite = favorites.some((item) => item.id === title.id && item.mediaType === title.mediaType);
-  const activePlayer = track === 'Dub/Captions' ? 'yapgrid' : track === 'Server 3' ? 'vidsrc' : 'vidspark';
+  const activePlayer = track === 'Dub/Captions' ? 'yapgrid' : track === 'Server 3' ? 'server3' : 'vidspark';
   const play = (episodeNumber = selectedEpisode) =>
     navigate(`/player/${mediaType}/${id}/${selectedSeason}/${episodeNumber}?player=${activePlayer}`);
 

@@ -9,7 +9,7 @@ export default function Player() {
   const params = useParams();
   const [searchParams] = useSearchParams();
   const requestedPlayer = searchParams.get('player');
-  const selectedPlayer = requestedPlayer === 'yapgrid' || requestedPlayer === 'vidsrc' ? requestedPlayer : 'vidspark';
+  const selectedPlayer = requestedPlayer === 'yapgrid' || requestedPlayer === 'server3' ? requestedPlayer : 'vidspark';
   const mediaType = params.mediaType === 'tv' ? 'tv' : 'movie';
   const id = Number(params.id);
   const seasonNumber = Number(params.season) || 1;
@@ -47,10 +47,10 @@ export default function Player() {
     ? mediaType === 'tv'
       ? `https://yapgrid.com/embed/tv/${id}/${seasonNumber}/${episodeNumber}?autoplay=1`
       : `https://yapgrid.com/embed/movie/${id}?autoplay=1`
-    : selectedPlayer === 'vidsrc'
+    : selectedPlayer === 'server3'
       ? mediaType === 'tv'
-        ? `https://vidsrc.mov/embed/tv/${id}/${seasonNumber}/${episodeNumber}`
-        : `https://vidsrc.mov/embed/movie/${id}`
+        ? `https://111movies.net/tv/${id}/${seasonNumber}/${episodeNumber}`
+        : `https://111movies.net/movie/${id}`
       : mediaType === 'tv'
         ? `https://vidspark.to/tv/${id}/${seasonNumber}/${episodeNumber}`
         : `https://vidspark.to/movie/${id}`;
