@@ -94,7 +94,7 @@ export default function Title() {
   }
 
   const favorite = favorites.some((item) => item.id === title.id && item.mediaType === title.mediaType);
-  const activePlayer = track === 'Dub/Captions' ? 'yapgrid' : 'vidspark';
+  const activePlayer = track === 'Dub/Captions' ? 'yapgrid' : track === 'Server 3' ? 'vidsrc' : 'vidspark';
   const play = (episodeNumber = selectedEpisode) =>
     navigate(`/player/${mediaType}/${id}/${selectedSeason}/${episodeNumber}?player=${activePlayer}`);
 
@@ -162,6 +162,7 @@ export default function Title() {
             {[
               { value: 'Original', label: 'Server 1' },
               { value: 'Dub/Captions', label: 'Server 2' },
+              { value: 'Server 3', label: 'Server 3' },
             ].map(({ value, label }) => (
               <button key={value} type="button" className={track === value ? 'selected' : ''} onClick={() => setTrack(value)}>
                 {label}
