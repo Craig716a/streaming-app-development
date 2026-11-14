@@ -9,8 +9,8 @@ export default function TitlePlayer({ mediaType, id, seasonNumber = 1, episodeNu
       : `https://yapgrid.com/embed/movie/${id}?autoplay=1`
     : player === 'server3'
       ? mediaType === 'tv'
-        ? `https://api.codespecters.com/embed/tv/${id}/${seasonNumber}/${episodeNumber}?apikey=DEMO_36da79f1`
-        : `https://api.codespecters.com/embed/movie/${id}?apikey=DEMO_36da79f1`
+        ? `https://tmdbplayer.nunesnetwork.com/?type=tv&id=${id}&s=${seasonNumber}&e=${episodeNumber}&server=1`
+        : `https://tmdbplayer.nunesnetwork.com/?type=movie&id=${id}&server=1`
       : mediaType === 'tv'
         ? `https://vidspark.to/tv/${id}/${seasonNumber}/${episodeNumber}`
         : `https://vidspark.to/movie/${id}`;
