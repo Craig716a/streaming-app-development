@@ -8,7 +8,8 @@ import { trackEvent } from '@/lib/analytics';
 export default function Player() {
   const params = useParams();
   const [searchParams] = useSearchParams();
-  const selectedPlayer = searchParams.get('player') === 'yapgrid' ? 'yapgrid' : 'vidspark';
+  const requestedPlayer = searchParams.get('player');
+  const selectedPlayer = requestedPlayer === 'yapgrid' || requestedPlayer === 'vidsrc' ? requestedPlayer : 'vidspark';
   const mediaType = params.mediaType === 'tv' ? 'tv' : 'movie';
   const id = Number(params.id);
   const seasonNumber = Number(params.season) || 1;
@@ -46,9 +47,13 @@ export default function Player() {
     ? mediaType === 'tv'
       ? `https://yapgrid.com/embed/tv/${id}/${seasonNumber}/${episodeNumber}?autoplay=1`
       : `https://yapgrid.com/embed/movie/${id}?autoplay=1`
-    : mediaType === 'tv'
-      ? `https://vidspark.to/tv/${id}/${seasonNumber}/${episodeNumber}`
-      : `https://vidspark.to/movie/${id}`;
+    : selectedPlayer === 'vidsrc'
+      ? mediaType === 'tv'
+        ? `https://vidsrc.mov/embed/tv/${id}/${seasonNumber}/${episodeNumber}`
+        : `https://vidsrc.mov/embed/movie/${id}`
+      : mediaType === 'tv'
+        ? `https://vidspark.to/tv/${id}/${seasonNumber}/${episodeNumber}`
+        : `https://vidspark.to/movie/${id}`;
   const resumeStart = Number(progress?.seconds) > 0 && progress?.seasonNumber === seasonNumber && progress?.episodeNumber === episodeNumber ? `&start=${Math.floor(progress.seconds)}` : '';
   const playbackUrl = `${embedUrl}${resumeStart}`;
 
