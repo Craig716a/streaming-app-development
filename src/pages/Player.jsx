@@ -9,7 +9,7 @@ export default function Player() {
   const params = useParams();
   const [searchParams] = useSearchParams();
   const requestedPlayer = searchParams.get('player');
-  const selectedPlayer = requestedPlayer === 'vidspark' || requestedPlayer === 'yapgrid' ? requestedPlayer : 'vidspeed';
+  const selectedPlayer = requestedPlayer === 'vidspeed' || requestedPlayer === 'vidspark' ? requestedPlayer : 'cinesrc';
   const mediaType = params.mediaType === 'tv' ? 'tv' : 'movie';
   const id = Number(params.id);
   const seasonNumber = Number(params.season) || 1;
@@ -22,20 +22,6 @@ export default function Player() {
     saveProgress({ seasonNumber, episodeNumber, seconds: sameEpisode ? Number(progress?.seconds) || 0 : 0 });
   }, [episodeNumber, mediaType, id, seasonNumber]);
 
-  useEffect(() => {
-    const handleMessage = (event) => {
-      if (!event.origin.includes('yapgrid.com')) return;
-      const payload = typeof event.data === 'string' ? (() => { try { return JSON.parse(event.data); } catch { return null; } })() : event.data;
-      const seconds = Number(payload?.currentTime ?? payload?.position ?? payload?.seconds);
-      if (Number.isFinite(seconds) && seconds >= 0) {
-        saveProgress({ seasonNumber, episodeNumber, seconds });
-        trackEvent({ eventType: 'progress', titleId: id, mediaType, seasonNumber, episodeNumber, seconds });
-      }
-    };
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, [episodeNumber, saveProgress, seasonNumber]);
-
   const details = useTitle(mediaType, id, { enabled: Number.isFinite(id) && id > 0 });
   const title = details.data;
   useEffect(() => {
@@ -43,18 +29,18 @@ export default function Player() {
   }, [episodeNumber, id, mediaType, seasonNumber, title?.title, title?.name]);
   const season = useSeason('tv', id, seasonNumber, { enabled: mediaType === 'tv' && Number.isFinite(id) && id > 0 });
   const episode = season.data?.episodes?.find((entry) => entry.episodeNumber === episodeNumber);
-  const embedUrl = selectedPlayer === 'vidspeed'
+  const embedUrl = selectedPlayer === 'cinesrc'
     ? mediaType === 'tv'
-      ? `https://vidspeed.sbs/embed/tv/${id}/${seasonNumber}/${episodeNumber}`
-      : `https://vidspeed.sbs/embed/movie/${id}`
-    : selectedPlayer === 'yapgrid'
+      ? `https://cinesrc.st/embed/tv/${id}?s=${seasonNumber}&e=${episodeNumber}`
+      : `https://cinesrc.st/embed/movie/${id}`
+    : selectedPlayer === 'vidspeed'
       ? mediaType === 'tv'
-        ? `https://yapgrid.com/embed/tv/${id}/${seasonNumber}/${episodeNumber}?autoplay=1`
-        : `https://yapgrid.com/embed/movie/${id}?autoplay=1`
+        ? `https://vidspeed.sbs/embed/tv/${id}/${seasonNumber}/${episodeNumber}`
+        : `https://vidspeed.sbs/embed/movie/${id}`
       : mediaType === 'tv'
         ? `https://vidspark.to/tv/${id}/${seasonNumber}/${episodeNumber}`
         : `https://vidspark.to/movie/${id}`;
-  const resumeStart = selectedPlayer !== 'vidspeed' && Number(progress?.seconds) > 0 && progress?.seasonNumber === seasonNumber && progress?.episodeNumber === episodeNumber ? `&start=${Math.floor(progress.seconds)}` : '';
+  const resumeStart = selectedPlayer === 'vidspark' && Number(progress?.seconds) > 0 && progress?.seasonNumber === seasonNumber && progress?.episodeNumber === episodeNumber ? `&start=${Math.floor(progress.seconds)}` : '';
   const playbackUrl = `${embedUrl}${resumeStart}`;
 
   return (
@@ -71,7 +57,7 @@ export default function Player() {
           key={playbackUrl}
           src={playbackUrl}
           title={`${title?.title || 'Title'} player`}
-          allow="encrypted-media; autoplay *; fullscreen *"
+          allow={selectedPlayer === 'cinesrc' ? 'autoplay; fullscreen; picture-in-picture' : 'encrypted-media; autoplay *; fullscreen *'}
           allowFullScreen
           sandbox={selectedPlayer === 'vidspeed' ? undefined : 'allow-scripts allow-same-origin allow-forms allow-presentation'}
           referrerPolicy="no-referrer"
