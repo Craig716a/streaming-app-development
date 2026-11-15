@@ -1,16 +1,16 @@
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-export default function TitlePlayer({ mediaType, id, seasonNumber = 1, episodeNumber = 1, player = 'vidspark' }) {
+export default function TitlePlayer({ mediaType, id, seasonNumber = 1, episodeNumber = 1, player = 'vidspeed' }) {
   const navigate = useNavigate();
-  const src = player === 'yapgrid'
+  const src = player === 'vidspeed'
     ? mediaType === 'tv'
-      ? `https://yapgrid.com/embed/tv/${id}/${seasonNumber}/${episodeNumber}?autoplay=1`
-      : `https://yapgrid.com/embed/movie/${id}?autoplay=1`
-    : player === 'server3'
+      ? `https://vidspeed.sbs/embed/tv/${id}/${seasonNumber}/${episodeNumber}`
+      : `https://vidspeed.sbs/embed/movie/${id}`
+    : player === 'yapgrid'
       ? mediaType === 'tv'
-        ? `https://viduki.net/1/tv/${id}/${seasonNumber}/${episodeNumber}?color=DC2626`
-        : `https://viduki.net/1/movie/${id}?color=DC2626`
+        ? `https://yapgrid.com/embed/tv/${id}/${seasonNumber}/${episodeNumber}?autoplay=1`
+        : `https://yapgrid.com/embed/movie/${id}?autoplay=1`
       : mediaType === 'tv'
         ? `https://vidspark.to/tv/${id}/${seasonNumber}/${episodeNumber}`
         : `https://vidspark.to/movie/${id}`;
@@ -26,7 +26,7 @@ export default function TitlePlayer({ mediaType, id, seasonNumber = 1, episodeNu
         title="Title player"
           allow="encrypted-media; autoplay *; fullscreen *"
           allowFullScreen
-          sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+          sandbox={player === 'vidspeed' ? undefined : 'allow-scripts allow-same-origin allow-forms allow-presentation'}
           referrerPolicy="no-referrer"
       />
     </section>

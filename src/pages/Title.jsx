@@ -36,7 +36,7 @@ export default function Title() {
 
   const [seasonNumber, setSeasonNumber] = useState(1);
   const [selectedEpisode, setSelectedEpisode] = useState(1);
-  const [track, setTrack] = useState('Original');
+  const [track, setTrack] = useState('vidspeed');
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [feedbackSent, setFeedbackSent] = useState(false);
@@ -94,7 +94,7 @@ export default function Title() {
   }
 
   const favorite = favorites.some((item) => item.id === title.id && item.mediaType === title.mediaType);
-  const activePlayer = track === 'Dub/Captions' ? 'yapgrid' : track === 'Server 3' ? 'server3' : 'vidspark';
+  const activePlayer = track;
   const play = (episodeNumber = selectedEpisode) =>
     navigate(`/player/${mediaType}/${id}/${selectedSeason}/${episodeNumber}?player=${activePlayer}`);
 
@@ -160,9 +160,9 @@ export default function Title() {
           <span>Servers</span>
           <div className="track-switch">
             {[
-              { value: 'Original', label: 'Server 1' },
-              { value: 'Dub/Captions', label: 'Server 2' },
-              { value: 'Server 3', label: 'Server 3' },
+              { value: 'vidspeed', label: 'Server 1' },
+              { value: 'vidspark', label: 'Server 2' },
+              { value: 'yapgrid', label: 'Server 3' },
             ].map(({ value, label }) => (
               <button key={value} type="button" className={track === value ? 'selected' : ''} onClick={() => setTrack(value)}>
                 {label}
