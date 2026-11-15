@@ -49,12 +49,12 @@ export default function Player() {
       : `https://yapgrid.com/embed/movie/${id}?autoplay=1`
     : selectedPlayer === 'server3'
       ? mediaType === 'tv'
-        ? `https://tmdbplayer.nunesnetwork.com/?type=tv&id=${id}&s=${seasonNumber}&e=${episodeNumber}&server=1`
-        : `https://tmdbplayer.nunesnetwork.com/?type=movie&id=${id}&server=1`
+        ? `https://www.vidy.st/tv/${id}/${seasonNumber}/${episodeNumber}?color=DC2626&nextEpisode=true&episodeSelector=true`
+        : `https://www.vidy.st/movie/${id}?color=DC2626`
       : mediaType === 'tv'
         ? `https://vidspark.to/tv/${id}/${seasonNumber}/${episodeNumber}`
         : `https://vidspark.to/movie/${id}`;
-  const resumeStart = Number(progress?.seconds) > 0 && progress?.seasonNumber === seasonNumber && progress?.episodeNumber === episodeNumber ? `&start=${Math.floor(progress.seconds)}` : '';
+  const resumeStart = selectedPlayer !== 'server3' && Number(progress?.seconds) > 0 && progress?.seasonNumber === seasonNumber && progress?.episodeNumber === episodeNumber ? `&start=${Math.floor(progress.seconds)}` : '';
   const playbackUrl = `${embedUrl}${resumeStart}`;
 
   return (
@@ -71,7 +71,7 @@ export default function Player() {
           key={playbackUrl}
           src={playbackUrl}
           title={`${title?.title || 'Title'} player`}
-          allow="autoplay *; fullscreen *; picture-in-picture *; encrypted-media *"
+          allow="encrypted-media; autoplay *; fullscreen *"
           allowFullScreen
           sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
           referrerPolicy="no-referrer"
