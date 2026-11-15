@@ -9,8 +9,8 @@ export default function TitlePlayer({ mediaType, id, seasonNumber = 1, episodeNu
       : `https://yapgrid.com/embed/movie/${id}?autoplay=1`
     : player === 'server3'
       ? mediaType === 'tv'
-        ? `https://www.vidy.st/tv/${id}/${seasonNumber}/${episodeNumber}?color=DC2626&nextEpisode=true&episodeSelector=true`
-        : `https://www.vidy.st/movie/${id}?color=DC2626`
+        ? `https://viduki.net/1/tv/${id}/${seasonNumber}/${episodeNumber}?color=DC2626`
+        : `https://viduki.net/1/movie/${id}?color=DC2626`
       : mediaType === 'tv'
         ? `https://vidspark.to/tv/${id}/${seasonNumber}/${episodeNumber}`
         : `https://vidspark.to/movie/${id}`;
