@@ -36,7 +36,7 @@ export default function Title() {
 
   const [seasonNumber, setSeasonNumber] = useState(1);
   const [selectedEpisode, setSelectedEpisode] = useState(1);
-  const [track, setTrack] = useState('vidspeed');
+  const [track, setTrack] = useState('cinesrc');
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [feedbackSent, setFeedbackSent] = useState(false);
@@ -160,9 +160,9 @@ export default function Title() {
           <span>Servers</span>
           <div className="track-switch">
             {[
-              { value: 'vidspeed', label: 'Server 1' },
-              { value: 'vidspark', label: 'Server 2' },
-              { value: 'yapgrid', label: 'Server 3' },
+              { value: 'cinesrc', label: 'Server 1' },
+              { value: 'vidspeed', label: 'Server 2' },
+              { value: 'vidspark', label: 'Server 3' },
             ].map(({ value, label }) => (
               <button key={value} type="button" className={track === value ? 'selected' : ''} onClick={() => setTrack(value)}>
                 {label}
