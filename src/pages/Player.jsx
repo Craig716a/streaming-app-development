@@ -9,7 +9,7 @@ export default function Player() {
   const params = useParams();
   const [searchParams] = useSearchParams();
   const requestedPlayer = searchParams.get('player');
-  const selectedPlayer = requestedPlayer === 'yapgrid' || requestedPlayer === 'server3' ? requestedPlayer : 'vidspark';
+  const selectedPlayer = requestedPlayer === 'vidspark' || requestedPlayer === 'yapgrid' ? requestedPlayer : 'vidspeed';
   const mediaType = params.mediaType === 'tv' ? 'tv' : 'movie';
   const id = Number(params.id);
   const seasonNumber = Number(params.season) || 1;
@@ -43,18 +43,18 @@ export default function Player() {
   }, [episodeNumber, id, mediaType, seasonNumber, title?.title, title?.name]);
   const season = useSeason('tv', id, seasonNumber, { enabled: mediaType === 'tv' && Number.isFinite(id) && id > 0 });
   const episode = season.data?.episodes?.find((entry) => entry.episodeNumber === episodeNumber);
-  const embedUrl = selectedPlayer === 'yapgrid'
+  const embedUrl = selectedPlayer === 'vidspeed'
     ? mediaType === 'tv'
-      ? `https://yapgrid.com/embed/tv/${id}/${seasonNumber}/${episodeNumber}?autoplay=1`
-      : `https://yapgrid.com/embed/movie/${id}?autoplay=1`
-    : selectedPlayer === 'server3'
+      ? `https://vidspeed.sbs/embed/tv/${id}/${seasonNumber}/${episodeNumber}`
+      : `https://vidspeed.sbs/embed/movie/${id}`
+    : selectedPlayer === 'yapgrid'
       ? mediaType === 'tv'
-        ? `https://viduki.net/1/tv/${id}/${seasonNumber}/${episodeNumber}?color=DC2626`
-        : `https://viduki.net/1/movie/${id}?color=DC2626`
+        ? `https://yapgrid.com/embed/tv/${id}/${seasonNumber}/${episodeNumber}?autoplay=1`
+        : `https://yapgrid.com/embed/movie/${id}?autoplay=1`
       : mediaType === 'tv'
         ? `https://vidspark.to/tv/${id}/${seasonNumber}/${episodeNumber}`
         : `https://vidspark.to/movie/${id}`;
-  const resumeStart = selectedPlayer !== 'server3' && Number(progress?.seconds) > 0 && progress?.seasonNumber === seasonNumber && progress?.episodeNumber === episodeNumber ? `&start=${Math.floor(progress.seconds)}` : '';
+  const resumeStart = selectedPlayer !== 'vidspeed' && Number(progress?.seconds) > 0 && progress?.seasonNumber === seasonNumber && progress?.episodeNumber === episodeNumber ? `&start=${Math.floor(progress.seconds)}` : '';
   const playbackUrl = `${embedUrl}${resumeStart}`;
 
   return (
@@ -73,7 +73,7 @@ export default function Player() {
           title={`${title?.title || 'Title'} player`}
           allow="encrypted-media; autoplay *; fullscreen *"
           allowFullScreen
-          sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+          sandbox={selectedPlayer === 'vidspeed' ? undefined : 'allow-scripts allow-same-origin allow-forms allow-presentation'}
           referrerPolicy="no-referrer"
         />
       </div>
