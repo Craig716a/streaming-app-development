@@ -442,9 +442,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .title-feedback { display: flex; align-items: center; gap: 8px; margin: 10px 0; }
 .title-feedback textarea { min-height: 38px; flex: 1; resize: vertical; padding: 9px; border: 1px solid var(--line); border-radius: 5px; background: #101b27; color: #fff; font-size: 11px; }
 .title-overview { margin: 10px 0 15px; color: #abb5bd; font-size: 11px; line-height: 1.55; }
-.audio-track-row { display: flex; flex-direction: column; gap: 9px; margin: 12px 0; color: #d8dee3; font-size: 14px; }
+.audio-track-row { display: flex; flex-direction: column; gap: 9px; margin: 12px 0; color: #d8dee3; font-size: 12px; }
 .track-switch { display: flex; gap: 9px; flex-wrap: wrap; }
-.track-switch button { min-width: 88px; min-height: 36px; padding: 0 12px; border: 0; border-radius: 5px; background: #18212c; color: #bbc4cc; font-size: 13px; cursor: pointer; }
+.track-switch button { min-width: 88px; min-height: 34px; padding: 0 12px; border: 0; border-radius: 5px; background: #18212c; color: #bbc4cc; font-size: 12px; cursor: pointer; }
 .track-switch button.selected { background: #eb263f; color: white; }
 .audio-note { margin: -3px 0 10px; color: #8997a4; font-size: 9px; }
 .episode-picker { margin-top: 14px; }

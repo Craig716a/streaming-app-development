@@ -157,7 +157,7 @@ export default function Title() {
         ) : null}
 
         <div className="audio-track-row">
-          <span>Servers</span>
+          <span>Switch server if not working</span>
           <div className="track-switch">
             {[
               { value: 'cinesrc', label: 'Server 1' },
